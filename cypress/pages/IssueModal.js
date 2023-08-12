@@ -14,6 +14,7 @@ class IssueModal {
         this.cancelDeletionButtonName = "Cancel";
         this.confirmationPopup = '[data-testid="modal:confirm"]';
         this.closeDetailModalButton = '[data-testid="icon:close"]';
+        this.testIssue = '//p[contains(text(),"TEST_TITLE")]';
     }
 
     getIssueModal() {
@@ -25,7 +26,9 @@ class IssueModal {
     }
 
     selectIssueType(issueType) {
-        cy.get(this.issueType).click('bottomRight');
+      //  cy.get(this.issueType).click('bottomRight');
+        cy.get(this.issueType).click();
+        cy.wait(2000);
         cy.get(`[data-testid="select-option:${issueType}"]`)
             .trigger('mouseover')
             .trigger('click');
@@ -33,6 +36,7 @@ class IssueModal {
 
     selectAssignee(assigneeName) {
         cy.get(this.assignee).click('bottomRight');
+        cy.wait(2000);
         cy.get(`[data-testid="select-option:${assigneeName}"]`).click();
     }
 
@@ -47,10 +51,15 @@ class IssueModal {
     createIssue(issueDetails) {
         this.getIssueModal().within(() => {
             this.selectIssueType(issueDetails.type);
+            cy.wait(1000);
             this.editDescription(issueDetails.description);
+            cy.wait(1000);
             this.editTitle(issueDetails.title);
+            cy.wait(1000);
             this.selectAssignee(issueDetails.assignee);
-            cy.get(this.submitButton).click();
+            cy.wait(1000);
+            cy.get(this.submitButton).click({waitForAnimations: true});
+            cy.wait(5000);
         });
     }
 
